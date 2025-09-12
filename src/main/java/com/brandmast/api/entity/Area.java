@@ -8,17 +8,17 @@ public class Area {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_area")
-    private Integer id_area;
+    private Integer idArea;
 
     @Column(name = "area_name")
     private String area_name;
 
     //Area ID
     public Integer getId_area() {
-        return id_area;
+        return idArea;
     }
     public void setId_area(Integer id_area) {
-        this.id_area = id_area;
+        this.idArea = id_area;
     }
 
     //Area Name
