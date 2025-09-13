@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,5 +28,34 @@ public interface AkcjaRepository extends JpaRepository<Akcja, Integer> {
     List<Akcja> findByBrandmasterAndMonthAndActionID(@Param("bm") Brandmaster bm,
                                                      @Param("month") Integer month,
                                                      @Param("actionID") Integer actionID);
+
+    @Query("""
+        SELECT a FROM Akcja a
+        WHERE a.brandmaster.idBm = :bmId
+          AND a.idAkcja <> :akcjaId
+          AND a.plannedStart < :end
+          AND a.plannedStop > :start
+    """)
+    List<Akcja> findOverlappingPlanned(
+            @Param("bmId") Integer bmId,
+            @Param("akcjaId") Integer akcjaId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
+
+    // Check for overlaps in real time
+    @Query("""
+        SELECT a FROM Akcja a
+        WHERE a.brandmaster.idBm = :bmId
+          AND a.idAkcja <> :akcjaId
+          AND a.realStart < :end
+          AND a.realStop > :start
+    """)
+    List<Akcja> findOverlappingReal(
+            @Param("bmId") Integer bmId,
+            @Param("akcjaId") Integer akcjaId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 }
 

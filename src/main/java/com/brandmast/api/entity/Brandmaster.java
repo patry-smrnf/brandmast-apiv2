@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "brandmasters")
-public class Brandmaster {
+public class Brandmaster implements Comparable<Brandmaster>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_bm", updatable = false, nullable = false)
@@ -40,5 +40,25 @@ public class Brandmaster {
     }
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true; // same reference
+        if (o == null || getClass() != o.getClass()) return false; // null or different class
+
+        Brandmaster that = (Brandmaster) o;
+        return idBm != null && idBm.equals(that.idBm); // compare ids safely
+    }
+
+    @Override
+    public int hashCode() {
+        return idBm != null ? idBm.hashCode() : 0;
+    }
+
+
+    @Override
+    public int compareTo(Brandmaster o) {
+        return Integer.compare(this.idBm, o.idBm);
     }
 }
