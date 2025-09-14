@@ -17,7 +17,7 @@ public class CorsConfig {
                         .allowedOrigins(
                                 "https://brandmast.vercel.app",
                                 "http://localhost:3000"
-                        ) // add more origins here
+                        )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);

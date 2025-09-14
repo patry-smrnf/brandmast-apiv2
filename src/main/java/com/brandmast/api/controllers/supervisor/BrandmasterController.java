@@ -1,13 +1,14 @@
 package com.brandmast.api.controllers.supervisor;
 
 import com.brandmast.api.Security;
+import com.brandmast.api.controllers.auth.dto.LoginRequest;
 import com.brandmast.api.controllers.brandmaster.dto.ActionsResponse;
+import com.brandmast.api.controllers.supervisor.dto.AddBmRequestBody;
+import com.brandmast.api.controllers.supervisor.dto.DelBmRequestBody;
 import com.brandmast.api.controllers.supervisor.dto.myBmsResponse;
-import com.brandmast.api.entity.Akcja;
-import com.brandmast.api.entity.Brandmaster;
-import com.brandmast.api.entity.Supervisor;
-import com.brandmast.api.entity.Team;
+import com.brandmast.api.entity.*;
 import com.brandmast.api.repository.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -109,4 +110,61 @@ public class BrandmasterController {
         return ResponseEntity.ok(result);
     }
 
+    @PostMapping("/delBm")
+    public ResponseEntity<?> delBm(@CookieValue(value = "Authtoken", required = true) String authToken, @Valid @RequestBody DelBmRequestBody requestBody) {
+        Security security_response = Security.check_security_SV(authToken, userRepository, supervisorRepository);
+        if (!security_response.success) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(security_response.message);
+        }
+        Supervisor sv = (Supervisor) security_response.data;
+
+        Optional<Team> optionalTeam = teamRepository.findBySupervisor(sv);
+        if (!optionalTeam.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"Couldnt find yo team \"}");
+        }
+        Team supervisor_team = optionalTeam.get();
+
+        Optional<Brandmaster> optionalBrandmaster = brandmasterRepository.findById(requestBody.bm_id);
+        if (!optionalBrandmaster.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"Brandmaster not found\"}");
+        }
+        Brandmaster brandmaster_final = optionalBrandmaster.get();
+
+        if(brandmaster_final.getTeam().getIdTeam() != supervisor_team.getIdTeam()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"To nie jest twoj brandmaster\"}");
+        }
+
+        brandmasterRepository.delete(brandmaster_final);
+        return ResponseEntity.ok().body("{\"message\":\"Brandmaster [PLH: " + brandmaster_final.getUser().getLogin() + ", "  + brandmaster_final.getUser().getImie() + "] deleted\"}");
+    }
+
+    @PostMapping("/addBm")
+    public ResponseEntity<?> addBm(@CookieValue(value = "Authtoken", required = true) String authToken, @Valid @RequestBody AddBmRequestBody requestBody) {
+        Security security_response = Security.check_security_SV(authToken, userRepository, supervisorRepository);
+        if (!security_response.success) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(security_response.message);
+        }
+        Supervisor sv = (Supervisor) security_response.data;
+
+        Optional<Team> optionalTeam = teamRepository.findBySupervisor(sv);
+        if (!optionalTeam.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"Couldnt find yo team \"}");
+        }
+        Team supervisor_team = optionalTeam.get();
+
+        User new_user = new User();
+        new_user.setLogin(requestBody.getLogin());
+        new_user.setImie(requestBody.getImie());
+        new_user.setNazwisko(requestBody.getNazwisko());
+
+        userRepository.save(new_user);
+
+        Brandmaster new_brandmaster = new Brandmaster();
+        new_brandmaster.setUser(new_user);
+        new_brandmaster.setTeam(supervisor_team);
+        brandmasterRepository.save(new_brandmaster);
+
+        return ResponseEntity.ok().body("{\"message\":\"Brandmaster [PLH: " + requestBody.getLogin() + ", "  + requestBody.getImie() + "] created\"}");
+
+    }
 }
