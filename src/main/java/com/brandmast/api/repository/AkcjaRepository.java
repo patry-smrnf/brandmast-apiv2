@@ -62,5 +62,10 @@ public interface AkcjaRepository extends JpaRepository<Akcja, Integer> {
     @Query("DELETE FROM Akcja a WHERE a.shop.idShop = :shopId")
     void deleteByShopId(@Param("shopId") Integer shopId);
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Akcja a WHERE a.brandmaster.idBm = :bmId")
+    void deleteByBrandmasterId(@Param("bmId") Integer bmId);
+
 }
 

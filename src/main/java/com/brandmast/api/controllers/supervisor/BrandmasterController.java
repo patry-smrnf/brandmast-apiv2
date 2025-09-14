@@ -134,6 +134,7 @@ public class BrandmasterController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"To nie jest twoj brandmaster\"}");
         }
 
+        akcjaRepository.deleteByBrandmasterId(brandmaster_final.getIdBm());
         brandmasterRepository.delete(brandmaster_final);
         return ResponseEntity.ok().body("{\"message\":\"Brandmaster [PLH: " + brandmaster_final.getUser().getLogin() + ", "  + brandmaster_final.getUser().getImie() + "] deleted\"}");
     }
@@ -151,6 +152,10 @@ public class BrandmasterController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"Couldnt find yo team \"}");
         }
         Team supervisor_team = optionalTeam.get();
+
+        if(userRepository.findByLogin(requestBody.getLogin()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"Theres a bm with such a login already\"}");
+        }
 
         User new_user = new User();
         new_user.setLogin(requestBody.getLogin());
