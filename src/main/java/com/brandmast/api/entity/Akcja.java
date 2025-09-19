@@ -127,7 +127,7 @@ public class Akcja {
     }
 
     public static String convert_time(OffsetDateTime utcTimestamp) {
-        // Replace with your country timezone, e.g. "Europe/Berlin"
+        // Replace with your country timezone, e.g. "Europe/Berln"
         ZoneId zone = ZoneId.of("Europe/Berlin");
 
         return utcTimestamp
