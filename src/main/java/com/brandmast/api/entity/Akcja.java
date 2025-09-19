@@ -47,7 +47,7 @@ public class Akcja {
     private boolean szkolenie;
 
     @Column(name = "czas_wpisania")
-    private String czasWpisania;
+    private OffsetDateTime czasWpisania;
 
     public Integer getIdAkcja() {
         return idAkcja;
@@ -119,10 +119,10 @@ public class Akcja {
         this.realStop = realStop;
     }
 
-    public String getCzasWpisania() {
+    public OffsetDateTime getCzasWpisania() {
         return czasWpisania;
     }
-    public void setCzasWpisania(String czasWpisania) {
+    public void setCzasWpisania(OffsetDateTime czasWpisania) {
         this.czasWpisania = czasWpisania;
     }
 

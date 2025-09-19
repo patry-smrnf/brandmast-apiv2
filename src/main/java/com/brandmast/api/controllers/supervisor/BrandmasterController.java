@@ -101,8 +101,9 @@ public class BrandmasterController {
                     at.setShop_address(action.getShop().getAddress()); // if exists
                 }
 
-                OffsetDateTime utc_time = OffsetDateTime.parse(action.getCzasWpisania());
-                at.setCzas_wpisania(Akcja.convert_time(utc_time));
+                if (action.getCzasWpisania() != null) {
+                    at.setCzas_wpisania(Akcja.convert_time(action.getCzasWpisania()));
+                }
 
                 at.setAction_id(action.getIdAkcja() != null ? action.getIdAkcja() : 0);
                 return at;
