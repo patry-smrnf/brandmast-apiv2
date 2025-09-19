@@ -16,6 +16,9 @@ public class myBmsResponse {
         private String action_system_start;
         private String action_system_end;
 
+        //Data wpisania
+        private String czas_wpisania;
+
         //<---Settery & Gettery -->
         public int getShop_id() {
             return shop_id;
@@ -36,6 +39,13 @@ public class myBmsResponse {
         }
         public void setShop_address(String shop_address) {
             this.shop_address = shop_address;
+        }
+
+        public String getCzas_wpisania(){
+            return czas_wpisania;
+        }
+        public void setCzas_wpisania(String czas_wpisania){
+            this.czas_wpisania = czas_wpisania;
         }
 
         public int getAction_id() { return  action_id; }

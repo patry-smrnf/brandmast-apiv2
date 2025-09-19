@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -99,6 +100,10 @@ public class BrandmasterController {
                     at.setShop_name(action.getShop().getName());
                     at.setShop_address(action.getShop().getAddress()); // if exists
                 }
+
+                OffsetDateTime utc_time = OffsetDateTime.parse(action.getCzasWpisania());
+                at.setCzas_wpisania(Akcja.convert_time(utc_time));
+
                 at.setAction_id(action.getIdAkcja() != null ? action.getIdAkcja() : 0);
                 return at;
             }).collect(Collectors.toList());

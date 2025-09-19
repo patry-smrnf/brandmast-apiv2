@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "akcje")
@@ -42,6 +45,9 @@ public class Akcja {
 
     @Column(name = "szkolenie")
     private boolean szkolenie;
+
+    @Column(name = "czas_wpisania")
+    private String czasWpisania;
 
     public Integer getIdAkcja() {
         return idAkcja;
@@ -111,5 +117,22 @@ public class Akcja {
     }
     public void setRealStop(LocalDateTime realStop) {
         this.realStop = realStop;
+    }
+
+    public String getCzasWpisania() {
+        return czasWpisania;
+    }
+    public void setCzasWpisania(String czasWpisania) {
+        this.czasWpisania = czasWpisania;
+    }
+
+    public static String convert_time(OffsetDateTime utcTimestamp) {
+        // Replace with your country timezone, e.g. "Europe/Berlin"
+        ZoneId zone = ZoneId.of("Europe/Berlin");
+
+        return utcTimestamp
+                .atZoneSameInstant(zone)  // convert to local timezone
+                .toLocalDateTime()        // strip zone info
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }
