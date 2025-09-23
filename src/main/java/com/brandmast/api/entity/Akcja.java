@@ -1,6 +1,8 @@
 package com.brandmast.api.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -46,7 +48,8 @@ public class Akcja {
     @Column(name = "szkolenie")
     private boolean szkolenie;
 
-    @Column(name = "czas_wpisania")
+    @Column(name = "czas_wpisania", updatable = false, insertable = false)
+    @Generated(GenerationTime.INSERT)
     private OffsetDateTime czasWpisania;
 
     public Integer getIdAkcja() {
